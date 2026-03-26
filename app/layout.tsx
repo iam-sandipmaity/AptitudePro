@@ -4,7 +4,10 @@ import "@/app/globals.css";
 
 export const metadata: Metadata = {
   title: "AptitudePro",
-  description: "Minimal, smooth aptitude practice and test simulation platform."
+  description: "Minimal, smooth aptitude practice and test simulation platform.",
+  icons: {
+    icon: "/favicon.ico"
+  }
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
