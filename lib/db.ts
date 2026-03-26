@@ -1,9 +1,21 @@
-import Database from "better-sqlite3";
+﻿import Database from "better-sqlite3";
 import { mkdirSync } from "node:fs";
 import path from "node:path";
 
 declare global {
   var __aptitudeDb: Database.Database | undefined;
+}
+
+function resolveDbPath() {
+  if (process.env.APTITUDE_DB_PATH) {
+    return process.env.APTITUDE_DB_PATH;
+  }
+
+  if (process.env.VERCEL) {
+    return path.join("/tmp", "aptitude-pro.db");
+  }
+
+  return path.join(process.cwd(), "data", "aptitude-pro.db");
 }
 
 function initialize(db: Database.Database) {
@@ -80,9 +92,9 @@ function initialize(db: Database.Database) {
 
 export function getDb() {
   if (!global.__aptitudeDb) {
-    const dataDir = path.join(process.cwd(), "data");
-    mkdirSync(dataDir, { recursive: true });
-    const dbPath = path.join(dataDir, "aptitude-pro.db");
+    const dbPath = resolveDbPath();
+    const dbDir = path.dirname(dbPath);
+    mkdirSync(dbDir, { recursive: true });
     global.__aptitudeDb = new Database(dbPath);
     initialize(global.__aptitudeDb);
   }
